@@ -1,30 +1,38 @@
-from flask import Flask, render_template, request
-from jinja2 import TemplateNotFound
-import os
+from flask import Flask, render_template, request , jsonify
 
-# Set template_folder to the local `templates` directory inside the Flask folder
-app = Flask(__name__, template_folder=os.path.join(os.path.dirname(__file__), 'templates'))
+app = Flask(__name__)
 
-@app.route('/')
-def home():
-    return "Welcome to the home page"
+@app.route('/', methods=['GET'])
+def welcome():
+    return '<h2>welcome to welcome page</h2>'
 
-@app.route('/first/<int:num>')
-def first(num):
-    return f"It's the first page\nMy marks are: {num}"
+@app.route('/first',methods=['GET'])
+def first():
+    return "<h2>This is first page</h2>"
+
+@app.route('/second/<marks>',methods=['GET'])
+def get_marks(marks):
+    return f"<h2>Your marks are : {marks} </h2>"    
 
 @app.route('/form', methods=['GET', 'POST'])
 def get_form():
-    if request.method == 'POST':
-        name = request.form.get('name', 'N/A')
-        age = request.form.get('age', 'N/A')
-        weight = request.form.get('weight', 'N/A')
-        return f"Name: {name}, Age: {age}, Weight: {weight}"
-
-    try:
+    if request.method == 'GET':
         return render_template('form.html')
-    except TemplateNotFound:
-        return "Form template 'form.html' not found. Create 'templates/form.html'.", 404
-
-if __name__ == "__main__":
+    
+    elif request.method == 'POST':
+        maths = request.form.get('maths')
+        history = request.form.get('history')
+        data_science = request.form.get('data_science') 
+        
+        average = float(maths) + float(history) + float(data_science) / 3        
+        return render_template('form.html', score=average)
+    
+@app.route('/api', methods=['POST'])
+def sum():
+    data = request.get_json()
+    a = data.get('a')
+    b = data.get('b')
+    return jsonify({'sum': a + b})
+    
+if __name__ == '__main__':
     app.run()
