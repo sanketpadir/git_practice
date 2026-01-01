@@ -1,6 +1,10 @@
 from setuptools import find_packages, setup
 from typing import List
 
+# setup.py file to turn the project into a reusable, installable Python package.if he
+#see __init__ file then it name package of it also if we want to write about project description
+#then we can use setup.py file
+
 
 def get_requirements(file_path: str) -> List[str]:
     """
